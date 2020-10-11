@@ -1,13 +1,19 @@
 // TODO: Require Controllers...
 const { Router } = require('express')
+const {getAllCubes} = require('../controllers/cubes');
+const {getCube} = require('../controllers/database')
 
 const router = Router();
 
 //title просто му го добавяме, каквото искаме, ако не е указано предварително
 router.get('/', (req,res) => {
-    res.render('index', {
-        title: 'Cube Workshop'
+    getAllCubes((cubes) => {
+        res.render('index', {
+            title: 'Cube Workshop',
+            cubes
+        })
     })
+    
 });
 
 router.get('/about', (req,res) => {
@@ -23,9 +29,13 @@ router.get('/create', (req,res) => {
 });
 
 router.get('/details/:id', (req,res) => {
-    res.render('details',{
-        title: 'Details | Cube Workshop'
+    getCube(req.params.id, (cube) => {
+      res.render('details',{
+        title: 'Details | Cube Workshop',
+        ...cube
+    })  
     })
+    
 });
 
 router.get('*', (req,res) => {
